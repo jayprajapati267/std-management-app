@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Students</h3>
+    <a href="{{ url_for('student.add_student') }}" class="btn btn-success">+ Add Student</a>
+</div>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-auto">
+        <input type="text" name="class_name" class="form-control" placeholder="Filter by class"
+               value="{{ class_filter }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">Filter</button>
+    </div>
+</form>
+
+<table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Email</th>
+            <th>Attendance %</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students %}
+        <tr>
+            <td>{{ student.roll_no }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.class_name }}</td>
+            <td>{{ student.email or "-" }}</td>
+            <td>{{ student.attendance_percentage() }}%</td>
+            <td class="text-end">
+                <a href="{{ url_for('report.student_report', student_id=student.id) }}"
+                   class="btn btn-sm btn-info">Report</a>
+                <a href="{{ url_for('student.edit_student', student_id=student.id) }}"
+                   class="btn btn-sm btn-warning">Edit</a>
+                <form method="POST" action="{{ url_for('student.delete_student', student_id=student.id) }}"
+                      class="d-inline" onsubmit="return confirm('Delete this student?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center text-muted">No students found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if pagination and pagination.pages > 1 %}
+<nav>
+    <ul class="pagination">
+        {% for p in pagination.iter_pages() %}
+            {% if p %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('student.list_students', page=p, class_name=class_filter) }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

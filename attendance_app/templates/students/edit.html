@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Edit Student{% endblock %}
+{% block content %}
+<h3>Edit Student — {{ student.name }}</h3>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-control") }}
+                {% for error in form.name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.roll_no.label(class="form-label") }}
+                {{ form.roll_no(class="form-control") }}
+                {% for error in form.roll_no.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.class_name.label(class="form-label") }}
+                {{ form.class_name(class="form-control") }}
+                {% for error in form.class_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+                {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            {{ form.submit(class="btn btn-warning") }}
+            <a href="{{ url_for('student.list_students') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

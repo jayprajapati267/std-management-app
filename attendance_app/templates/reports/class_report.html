@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Class Report{% endblock %}
+{% block content %}
+<h3>Class Attendance Report</h3>
+
+<form method="GET" class="row g-2 mb-4">
+    <div class="col-auto">
+        <input type="text" name="class_name" class="form-control" placeholder="Class / Section"
+               value="{{ class_name }}" required>
+    </div>
+    <div class="col-auto">
+        <input type="date" name="date" class="form-control"
+               value="{{ selected_date if selected_date else '' }}">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-outline-primary">View Report</button>
+    </div>
+</form>
+
+{% if summary %}
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            {% if selected_date %}<th>Status on {{ selected_date }}</th>{% endif %}
+            <th>Overall Attendance %</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in summary %}
+        <tr>
+            <td>{{ row.student.roll_no }}</td>
+            <td>{{ row.student.name }}</td>
+            {% if selected_date %}
+            <td>
+                <span class="badge bg-{{ 'success' if row.status == 'Present' else ('warning' if row.status == 'Late' else ('danger' if row.status == 'Absent' else 'secondary')) }}">
+                    {{ row.status }}
+                </span>
+            </td>
+            {% endif %}
+            <td>{{ row.percentage }}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif class_name %}
+<p class="text-muted">No students found in class "{{ class_name }}".</p>
+{% endif %}
+{% endblock %}
